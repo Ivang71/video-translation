@@ -1,0 +1,1 @@
+To find the channel id, go to the channel page and search for "canonical" in the elements tab

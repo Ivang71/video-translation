@@ -1,0 +1,25 @@
+{
+  "name": "video-translation",
+  "version": "0.0.1",
+  "main": "src/main.ts",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon -e 'ts' --no-warnings --exec node --loader ts-node/esm --watch src src/main.ts"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "dotenv": "^16.3.1",
+    "fingerprint-injector": "^2.1.42",
+    "googleapis": "^128.0.0",
+    "node-fetch": "^3.3.2",
+    "playwright": "^1.39.0",
+    "youtubei.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.9",
+    "nodemon": "^3.0.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  }
+}
