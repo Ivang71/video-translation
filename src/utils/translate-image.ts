@@ -1,7 +1,7 @@
 import { chromium } from 'playwright'
 import { newInjectedContext } from 'fingerprint-injector'
-import { randint, randChoice } from '../utils/index.ts'
-import { assetsDirectory } from '../main.ts'
+import { randint } from '../utils/index.ts'
+import { assetsDir } from './paths.ts'
 
 
 export const translateImage = async (imageUrl: string) => {
@@ -51,7 +51,7 @@ export const translateImage = async (imageUrl: string) => {
     ])
 
     const download = await downloadPromise
-    const imagePath = `${assetsDirectory}/images/${alt}.jpg`
+    const imagePath = `${assetsDir}/images/${alt}.jpg`
     await download.saveAs(imagePath)
     browser.close()
     return imagePath
