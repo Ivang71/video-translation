@@ -2,6 +2,12 @@ import { promises as fs } from "fs"
 import { createWriteStream } from 'fs'
 import { youtube_v3 } from 'googleapis'
 import ytdl from 'ytdl-core'
+import { join, extname } from 'path'
+import { promisify } from 'node:util'
+import { exec as execCallback } from 'node:child_process'
+
+
+export const exec = promisify(execCallback)
 
 
 export const randChoice = (a: any[]) => a[Math.floor(Math.random() * a.length)]
@@ -51,5 +57,13 @@ export async function downloadVideo(id: string, dir: string) {
         videoReadableStream.on('error', reject)
         fileWriteStream.on('error', reject)
     })
+}
+
+
+export const downloadTranslatedAudio = async (dir: string, id: string, targetLang: string) => {
+    await exec(`vot-cli --output=${dir} --reslang=${targetLang} https://www.youtube.com/watch?v=${id}`)
+    const files = await fs.readdir(dir)
+    const audioName = files.filter(file => extname(file).toLowerCase() === '.mp3')[0]
+    await fs.rename(join(dir, audioName), join(dir, 'audio.mp3'))
 }
 

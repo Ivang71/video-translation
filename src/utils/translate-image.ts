@@ -1,11 +1,11 @@
 import { chromium } from 'playwright'
 import { newInjectedContext } from 'fingerprint-injector'
+import { join } from 'path'
 import { randint } from '../utils/index.ts'
-import { assetsDir } from './paths.ts'
 
 
-export const translateImage = async (imageUrl: string) => {
-    const browser = await chromium.launch({ headless: false })
+export const translateImage = async (imageUrl: string, targetLang: string, saveDir: string) => {
+    const browser = await chromium.launch({ headless: true })
     const context = await newInjectedContext(browser, {
         fingerprintOptions: { devices: ['desktop'], screen: { maxWidth: 1980 }},
         newContextOptions: {
@@ -21,7 +21,7 @@ export const translateImage = async (imageUrl: string) => {
     await page.waitForLoadState('networkidle')
     await page.keyboard.press(`Control+C`)
 
-    await page.goto('https://translate.google.com/?sl=en&tl=ru&op=images')
+    await page.goto(`https://translate.google.com/?sl=auto&tl=${targetLang}&op=images`)
     await page.waitForTimeout(randint(993, 1493))
 
     const mockButton = await page.$('button[jsname="dq27Te"]')
@@ -51,8 +51,7 @@ export const translateImage = async (imageUrl: string) => {
     ])
 
     const download = await downloadPromise
-    const imagePath = `${assetsDir}/images/${alt}.jpg`
+    const imagePath = join(saveDir, 'thumb.jpg')
     await download.saveAs(imagePath)
     browser.close()
-    return imagePath
 }

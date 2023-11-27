@@ -1,4 +1,6 @@
 node_modules
 assets
-token.json
+credentials/*
+!credentials/.gitkeep
+yarn-error.log
 .env
