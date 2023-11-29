@@ -5,7 +5,9 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "nodemon -e 'ts' --no-warnings --exec node --loader ts-node/esm --watch src src/main.ts"
+    "dev": "node --watch --no-warnings --loader=ts-node/esm ./src/main.ts",
+    "start-bg": "nohup node --watch --no-warnings --loader=ts-node/esm ./src/main.ts >> ./logs/application.log 2>&1 &",
+    "stop-bg": "pkill -f 'node --watch --no-warnings --loader=ts-node/esm ./src/main.ts'"
   },
   "dependencies": {
     "chalk": "^5.3.0",
