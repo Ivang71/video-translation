@@ -8,7 +8,7 @@ const truncateString = (str: string, maxLength: number): string => {
 }
 
 /**
- * Translates a batch of strings to destination language. Truncates strings longer than 14 500 characters.
+ * Translates a batch of strings to target language. Truncates strings longer than 14 500 characters.
 */
 export const translate = async (destLang: string, batch: string[]): Promise<string[]> => {
     const truncatedBatch: string[] = batch.map((str) => truncateString(str, maxLength))

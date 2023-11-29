@@ -1,1 +1,1 @@
-To find the channel id, go to the channel page and search for "canonical" in the elements tab
+To find the channel id, go to the channel page and search for "canonical" in the elements tab. Onen of the occurences wil contain a link that looks like `https://www.youtube.com/channel/UCkCGANrihzExmu9QiqZpYaN`, the part after the `/channel/` is the id.

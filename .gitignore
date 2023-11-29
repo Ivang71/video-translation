@@ -1,6 +1,12 @@
 node_modules
-assets
-credentials/*
-!credentials/.gitkeep
 yarn-error.log
 .env
+
+assets/*
+!assets/.gitkeep
+
+credentials/*
+!credentials/.gitkeep
+
+logs/*
+!logs/.gitkeep

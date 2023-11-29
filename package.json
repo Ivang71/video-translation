@@ -13,9 +13,12 @@
     "fingerprint-injector": "^2.1.42",
     "google-auth-library": "^9.2.0",
     "googleapis": "^128.0.0",
+    "mongodb": "^6.3.0",
     "node-fetch": "^3.3.2",
     "playwright": "^1.39.0",
     "python-shell": "^5.0.0",
+    "winston": "^3.11.0",
+    "youtubei.js": "^7.0.0",
     "ytdl-core": "^4.11.5"
   },
   "devDependencies": {

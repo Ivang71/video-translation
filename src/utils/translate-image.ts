@@ -4,6 +4,7 @@ import { join } from 'path'
 import { randint } from '../utils/index.ts'
 
 
+// example image url: https://i.ytimg.com/vi/ID/maxresdefault.jpg
 export const translateImage = async (imageUrl: string, targetLang: string, saveDir: string) => {
     const browser = await chromium.launch({ headless: true })
     const context = await newInjectedContext(browser, {

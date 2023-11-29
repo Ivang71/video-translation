@@ -1,18 +1,10 @@
-// YouTube API video uploader using JavaScript/Node.js
-// You can find the full visual guide at: https://www.youtube.com/watch?v=gncPwSEzq1s
-// You can find the brief written guide at: https://quanticdev.com/articles/automating-my-youtube-uploads-using-nodejs
-//
-// Upload code is adapted from: https://developers.google.com/youtube/v3/quickstart/nodejs
-
 import * as fs from 'fs'
 import readline from 'readline'
-import assert from 'assert'
 import { google, youtube_v3 } from 'googleapis'
 import { dirname, join } from 'path'
 import { credsDir } from './paths.ts'
 import { Credentials, OAuth2Client } from 'google-auth-library'
-import { GaxiosResponse } from 'gaxios'
-import { log } from 'console'
+import { BodyResponseCallback } from 'googleapis/build/src/apis/abusiveexperiencereport/index'
 
 const OAuth2 = google.auth.OAuth2
 
@@ -41,8 +33,12 @@ interface UploadParams {
     tags: string[]
     categoryId: string
     lang: string
+    callback: BodyResponseCallback<youtube_v3.Schema$Video>
 }
 
+/**
+ * Uploads video to youtube via Youtube Data API
+ */
 export const uploadVideo = (p: UploadParams) => {
     fs.readFile(CLIENT_SECRET, (err, content) => {
         if (err) {
@@ -56,43 +52,34 @@ export const uploadVideo = (p: UploadParams) => {
 }
 
 function upload(p: UploadParams & { auth: any }) {
-    const service = google.youtube('v3')
-log(p)
-    // service.videos.insert(
-    //     {
-    //         auth: p.auth,
-    //         part: ['snippet', 'status'],
-    //         requestBody: {
-    //             snippet: {
-    //                 title: p.title,
-    //                 description: p.desc,
-    //                 tags: p.tags,
-    //                 categoryId: p.categoryId,
-    //                 defaultLanguage: p.lang,
-    //                 defaultAudioLanguage: p.lang,
-    //                 thumbnails: {
-    //                     maxres: {
-    //                         url: join(p.dirName, 'thumb.jpg')
-    //                     }
-    //                 }
-    //             },
-    //             status: {
-    //                 privacyStatus: 'public',
-    //             },
-    //         },
-    //         media: {
-    //             body: fs.createReadStream(join(p.dirName, 'video.mp4')),
-    //         },
-    //     },
-    //     (err: Error | null, response: GaxiosResponse<youtube_v3.Schema$Video> | null) => {
-    //         if (err) {
-    //             console.log('The API returned an error: ' + err)
-    //             return
-    //         }
-    //         console.log(response.data)
-    //         console.log('Video uploaded.')
-    //     }
-    // )
+    google.youtube('v3').videos.insert(
+        {
+            auth: p.auth,
+            part: ['snippet', 'status'],
+            requestBody: {
+                snippet: {
+                    title: p.title,
+                    description: p.desc,
+                    tags: p.tags,
+                    categoryId: p.categoryId,
+                    defaultLanguage: p.lang,
+                    defaultAudioLanguage: p.lang,
+                    thumbnails: {
+                        maxres: {
+                            url: join(p.dirName, 'thumb.jpg')
+                        }
+                    }
+                },
+                status: {
+                    privacyStatus: 'public',
+                },
+            },
+            media: {
+                body: fs.createReadStream(join(p.dirName, 'video.mp4')),
+            },
+        },
+        p.callback,
+    )
 }
 
 function authorize(credentials: ClientSecret, callback: Function) {
