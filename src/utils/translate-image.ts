@@ -41,7 +41,6 @@ export const translateImage = async (imageUrl: string, targetLang: string, saveD
     await Promise.all([
       page.waitForEvent('download'),
       page.evaluate(({url, alt}) => {
-        console.log('Browser ', url, alt)
         const a = document.createElement('a')
         a.href = url
         a.download = alt + '.jpg'

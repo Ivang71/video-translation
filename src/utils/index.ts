@@ -6,7 +6,7 @@ import { join, extname } from 'path'
 import { promisify } from 'node:util'
 import winston from 'winston'
 import { exec as execCallback } from 'node:child_process'
-import { assetsDir } from "./paths.ts"
+import { assetsDir, logsDir } from "./paths.ts"
 import { translate } from "./translate.ts"
 import { translateImage } from "./translate-image.ts"
 import Innertube from "youtubei.js/agnostic"
@@ -21,18 +21,17 @@ export const randChoice = (a: any[]) => a[Math.floor(Math.random() * a.length)]
 export const randint = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min
 
 
-export const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-        winston.format.timestamp({ format: 'YYYY-MM-DDTHH:mm:ss.SSSZ' }), // Customize timestamp format
-        winston.format.printf(info => `${info.timestamp}`), 
-        winston.format.simple(),
-    ),
-    transports: [
-        new winston.transports.Console(),
-        new winston.transports.File({ filename: 'logs/application.log', maxsize: 5 * 1024 * 1024, maxFiles: 1 }),
-    ],
+const format = winston.format
+const consoleTransport = new winston.transports.Console({
+    "format": format.combine(
+        format.timestamp({
+            format: 'MM-DD HH:mm:ss.SSS'
+        }),
+        format.printf(info => `${info.timestamp} | ${info.level.padEnd(5)} | ${info.message}`+(info.splat!==undefined?`${info.splat}`:" "))
+    )
 })
+
+export const logger = winston.createLogger({ transports: [consoleTransport] })
 
 
 export const wait = (timeout: number) => new Promise<void>(r => setTimeout(r, timeout))
@@ -127,8 +126,6 @@ export const processVideo = async (id: string, targetLang: string, youtube: yout
         privacy: 'PUBLIC'
     })
     if (!upload.data.videoId) return false
-    
-    console.log(!upload.data.videoId)
 
     const thumb = await fs.readFile(join(dir, 'thumb.jpg'))
     const thumbUpload = await yt.studio.setThumbnail(upload.data.videoId, thumb)
@@ -147,7 +144,7 @@ export const processVideo = async (id: string, targetLang: string, youtube: yout
     //         categoryId: v.categoryId,
     //         lang: targetLang,
     //         callback: (err, res) => {
-    //             console.log('Got response: ', res)
+    //             console.lo('Got response: ', res)
     //             if (err) throw err
     //             // if (res.status === 403) resolve(false)
     //             fs.rm(dir, { recursive: true, force: true })

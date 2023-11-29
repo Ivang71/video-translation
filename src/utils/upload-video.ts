@@ -5,6 +5,7 @@ import { dirname, join } from 'path'
 import { credsDir } from './paths.ts'
 import { Credentials, OAuth2Client } from 'google-auth-library'
 import { BodyResponseCallback } from 'googleapis/build/src/apis/abusiveexperiencereport/index'
+import { logger } from './index.ts'
 
 const OAuth2 = google.auth.OAuth2
 
@@ -42,7 +43,7 @@ interface UploadParams {
 export const uploadVideo = (p: UploadParams) => {
     fs.readFile(CLIENT_SECRET, (err, content) => {
         if (err) {
-            console.log('Error loading client secret file: ' + err)
+            logger.info('Error loading client secret file: ' + err)
             return
         }
         authorize(JSON.parse(content.toString()), (auth: ClientSecret) =>
@@ -104,7 +105,7 @@ function getNewToken(oauth2Client: OAuth2Client, callback: Function) {
         access_type: 'offline',
         scope: SCOPES,
     })
-    console.log('Authorize this app by visiting this url: ', authUrl)
+    logger.info('Authorize this app by visiting this url: ', authUrl)
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -113,7 +114,7 @@ function getNewToken(oauth2Client: OAuth2Client, callback: Function) {
         rl.close()
         oauth2Client.getToken(code, (err, token) => {
             if (err) {
-                console.log('Error while trying to retrieve access token', err)
+                logger.info('Error while trying to retrieve access token', err)
                 return
             }
             // oauth2Client.setCredentials({access_token: JSON.parse(token.toString())})
@@ -127,6 +128,6 @@ function getNewToken(oauth2Client: OAuth2Client, callback: Function) {
 function storeToken(token: Credentials) {
     fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
         if (err) throw err
-        console.log('Token stored to ' + TOKEN_PATH)
+        logger.info('Token stored to ' + TOKEN_PATH)
     })
 }

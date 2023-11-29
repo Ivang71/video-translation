@@ -3,7 +3,7 @@ import { join } from 'path'
 import * as dotenv from 'dotenv'
 import { promises as fs, existsSync } from 'fs'
 import { google } from 'googleapis'
-import { assetsDir, credsDir, rootDir } from './utils/paths.ts'
+import { assetsDir, credsDir } from './utils/paths.ts'
 import { getVideos, logger, processVideo, wait } from './utils/index.ts'
 import { Innertube, UniversalCache } from 'youtubei.js'
 import { MongoClient, ServerApiVersion } from 'mongodb'
@@ -88,7 +88,7 @@ try {
                 )
             } else {
                 const waitTime = 40 * 60 * 1000
-                logger.info(`Reached upload limit or some bullshit.\n Waiting ${waitTime / 60000} minutes before retrying again`)
+                logger.info(`Reached upload limit or some bullshit.\nWaiting ${waitTime / 60000} minutes before retrying again`)
                 await wait(waitTime)
             }
         } while (!success)
