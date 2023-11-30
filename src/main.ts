@@ -60,7 +60,7 @@ try {
     if (!sourceChannel) {
         logger.info('Channel is not in database, scraping video ids')
         let sourceVideoIds = await getVideos(sourceChannelId, youtube)
-        sourceVideoIds = sourceVideoIds.reverse() // reverse so the new ones are last
+        // sourceVideoIds = sourceVideoIds.reverse() // reverse so the new ones are last
         await channelsCollection.insertOne({
             id: sourceChannelId,
             sourceVideoIds,
